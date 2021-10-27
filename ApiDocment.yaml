@@ -1,0 +1,457 @@
+openapi: "3.0.0"
+info:
+  title: DXContestSupportSystem API(仮名)
+  description: DXコンテストに関する活動においてサポートを行うシステムに関連するAPI
+  version: 0.1.0 beta
+security:
+  - api_key: []
+servers:
+  - url: http://api.<domain>/v1
+    description: 本番環境API
+  - url: http://dev.<domain>/v1
+    description: 開発環境API
+paths:
+  /version:
+    get:
+      tags:
+        - system
+      summary: apiバージョンの取得
+      description: バージョンをメッセージで返す
+      parameters: []
+      security:
+        - {}
+      responses:
+        '200':
+          description:
+            version
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/ApiResponse'
+                example:
+                  status: ok
+                  message: 0.0.1
+  /helth:
+    get:
+      tags:
+        - system
+      summary: apiの状態を取得
+      description: サーバー状態ををメッセージで返す
+      parameters: []
+      security:
+        - {}
+      responses:
+        '200':
+          description:
+            version
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/ApiResponse'
+                example:
+                  status: ok
+                  message: "ok"
+  /users:
+    get:
+      tags:
+        - users
+      summary: 登録済みユーザーの一覧
+      description: UserModelを配列にて返す
+      parameters: []
+      responses:
+        '200':
+          description: UserModelJsonの配列
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - users
+      summary: ユーザーの新規登録
+      description: ユーザーの作成
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  
+  /users/{userId}:
+    get:
+      tags:
+        - users
+      summary: ユーザーidのユーザーモデルデータを取得
+      description: ユーザーモデルの取得
+      parameters:
+        - name: userId
+          in: path
+          description: ユーザー管理Id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ユーザーモデルのJson
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description:
+            システムメッセージ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                status: errer
+                message: NotFound
+    put:
+      tags:
+        - users
+      summary: ユーザーデータの更新
+      description: ユーザーモデルの更新
+      parameters:
+        - name: userId
+          in: path
+          description: ユーザー管理Id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: 更新後のユーザーモデルデータ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description:
+            システムメッセージ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                status: errer
+                message: NotFound
+        
+      
+    delete:
+      tags:
+        - users
+      summary: ユーザーの削除
+      description:  ユーザーの削除
+      parameters:
+        - name: userId
+          in: path
+          description: ユーザー管理ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 完了メッセージ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                status: ok
+                message: deleted
+        '404':
+          description:
+            システムメッセージ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                status: errer
+                message: NotFound
+  /schoolcard:
+    get:
+      tags:
+        - schoolCards
+      summary: 登録済み学生証データの取得
+      description: 学生証データ一覧の取得
+      parameters: []
+      responses:
+        '200':
+          description: 学生証データの配列
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                 $ref: '#/components/schemas/SchoolCard'
+    post:
+      tags:
+        - schoolCards
+      summary:
+        学生証データの登録
+      description:
+        学生証データの登録
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchoolCard'
+      responses:
+        '201':
+          description:
+            作成した学生証データ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolCard'
+  /schoolcard/{scoolcardId}:
+    get:
+      tags:
+        - schoolCards
+      summary: 学生証に紐づけられたユーザーデータの取得
+      parameters:
+        - name: scoolcardId
+          in: path
+          description: 学生証Id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ユーザーデータ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description:
+            システムメッセージ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+              example:
+                status: errer
+                message: NotFound
+  
+  /room:
+    get:
+      tags:
+        - roomInOut
+      summary: 在室中の学生一覧を取得
+      parameters: []
+      responses:
+        '200':
+          description: 在室の学生配列
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/User'
+  /room/{userId}:
+    get:
+      tags:
+        - roomInOut
+      summary: ユーザーの在室情報を取得
+      parameters:
+        - name: userId
+          in: path
+          description: ユーザーid
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 在室情報レスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoomInOutResponse"
+    put:
+      tags:
+        - roomInOut
+      summary: ユーザーの在室情報を更新(状態反転)
+      parameters:
+        - name: userId
+          in: path
+          description: ユーザーid
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 在室情報レスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoomInOutResponse"
+    post:
+      tags:
+        - roomInOut
+      summary: ユーザーの在室情報を更新(状態指定)
+      parameters:
+        - name: userId
+          in: path
+          description: ユーザーid
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: ['in','out']
+              
+      responses:
+        '200':
+          description: 在室情報レスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoomInOutResponse"
+  /room/history:
+    get:
+      tags:
+        - roomInOut
+      summary: 全員の入退室履歴を取得
+      parameters: []
+      responses:
+        '200':
+          description: 入退室データ配列
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomInOut'
+      
+  /room/history/{userId}:
+    get:
+      tags:
+        - roomInOut
+      summary: ユーザーの入退室履歴を取得
+      parameters:
+        - name: userId
+          in: path
+          description: 学生Id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 入退室データ配列
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomInOut'
+      
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - schoolId
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        schoolId:
+          type: string
+    SchoolCard:
+      type: object
+      required:
+        - schoolCardId
+        - userId
+      properties:
+        schoolCardId:
+          type: string
+        userid:
+          type: integer
+    RoomInOut:
+      type: object
+      required:
+        - id
+        - userId
+        - enterTime
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        enterTime:
+          type: string
+          format: date
+        leaveTime:
+          type: string
+          format: date
+    ApiResponse:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+    RoomInOutResponse:
+      type: object
+      required:
+        - userId
+        - status
+      properties:
+        userId:
+          type: string
+        status:
+          type: string
+          enum: ['in','out']
+        enterTime:
+          type: string
+          format: Date
+          
+tags:
+  - name: users
+    description: ユーザーに関するAPI群
+  - name: system
+    description:
+      システムに関するAPI群
+  - name: schoolCards
+    description:
+      学生証に関するAPI群
+  - name: roomInOut
+    description:
+      入退室に関するAPI群
