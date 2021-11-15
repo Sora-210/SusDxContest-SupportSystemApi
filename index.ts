@@ -17,6 +17,15 @@ app.use(cors());
 //Routing
 import { SystemRouter } from './src/router/System'
 app.use('/', SystemRouter)
+//以下認証必須
+import { APIChecker } from './src/CheckerAPIKEY'
+app.use(APIChecker)
+import { RoomInOut } from './src/router/RoomInOut'
+app.use('/room', RoomInOut)
+import { SchoolCard } from './src/router/SchoolCard'
+app.use('/schoolcards', SchoolCard)
+import { User } from './src/router/User'
+app.use('/users', User)
 //#######################################
 //Listening
 app.listen(PORT, () => {
