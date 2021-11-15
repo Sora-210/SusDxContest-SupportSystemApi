@@ -12,7 +12,7 @@ get /helth
 //[get] /verson
 SystemRouter.get('/version', (req, res) => {
     const responseMessage = {
-        "status": "ok",
+        "status": "success",
         "message": VERSION
     }
     res.status(200).json(responseMessage)
@@ -21,7 +21,7 @@ SystemRouter.get('/version', (req, res) => {
 //[get] /helth
 SystemRouter.get('/helth', (req, res) => {
     const responseMessage = {
-        "status": "ok",
+        "status": "success",
         "message": "ok"
     }
     res.status(200).json(responseMessage)
