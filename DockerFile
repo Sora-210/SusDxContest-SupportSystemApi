@@ -13,4 +13,4 @@ RUN /bin/bash &&\
 
 ENTRYPOINT npm run start
 
-EXPOSE 80
+EXPOSE 8967
