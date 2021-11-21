@@ -4,8 +4,8 @@ const dbInstance = new Sequelize({
     "username": "root",
     "password": "pass",
     "database": "sdsSystem",
-    "host": "localhost",
-    "dialect": "sqlite"
+    "host": "db",
+    "dialect": "mysql"
 })
 
 //Migration

@@ -1,0 +1,16 @@
+FROM node:14
+
+RUN mkdir /home/api
+COPY ./ /home/api
+
+WORKDIR /home/api
+
+RUN /bin/bash &&\
+    apt-get -y update &&\
+    apt-get upgrade &&\
+    npm update -g &&\
+    npm install -y
+
+ENTRYPOINT npm run start
+
+EXPOSE 80

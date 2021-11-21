@@ -1,0 +1,27 @@
+version: '2.2'
+services:
+  db:
+    image: mysql:8.0.21
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: sdsSystem
+      MYSQL_ROOT_Host: api
+    volumes:
+      - ./DB:/var/lib/mysql
+    networks:
+      apinetwork:
+        ipv4_address: 172.0.1.2
+  api:
+    build: .
+    ports:
+      - 80:80
+    networks:
+      - apinetwork:
+        ipv4_address: 172.0.1.3
+networks:
+  apinetwork:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.0.1.0/24
