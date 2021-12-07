@@ -51,7 +51,7 @@ User.post('/', async (req, res) => {
                 "status": "Error",
                 "message": "ServerError"
             }
-            res.status(500).json(resMes)
+            res.status(404).json(resMes)
         }
     }
 })
@@ -59,17 +59,17 @@ User.post('/', async (req, res) => {
 
 User.get('/:userId', async (req, res) => {
     const T = DB.instance.transaction();
-    if (req.query.userId == "") {
+    if (req.params.userId == "") {
         const resMes = {
             status: "Error",
-            message: "Not Enough Query"
+            message: "Not Enough Params"
         }
         res.status(402).json(resMes);
     } else {
         try {
             const option = {
                 where: {
-                    id: req.query.userId
+                    id: req.params.userId
                 }
             }
             const Users = await DB.Users.findOne(option);
@@ -89,21 +89,21 @@ User.get('/:userId', async (req, res) => {
 
 User.patch('/:userId', async (req, res) => {
     const T = DB.instance.transaction();
-    if (req.query.userId == "") {
+    if (req.params.userId == "") {
         const resMes = {
             status: "Error",
-            message: "Not Enough Query"
+            message: "Not Enough Params"
         }
         res.status(402).json(resMes);
     } else {
         try {
             const option = {
                 where: {
-                    id: req.query.userId
+                    id: req.params.userId
                 }
             }
             const sendData = req.body;
-            const Users = await DB.Users.update(option, sendData);
+            const Users = await DB.Users.update(sendData, option);
             (await T).commit();
             res.status(200).json(Users)
         } catch(e) {
@@ -120,7 +120,7 @@ User.patch('/:userId', async (req, res) => {
 
 User.delete('/:userId', async (req, res) => {
     const T = DB.instance.transaction();
-    if (req.query.userId == "") {
+    if (req.params.userId == "") {
         const resMes = {
             status: "Error",
             message: "Not Enough Query"
@@ -130,7 +130,7 @@ User.delete('/:userId', async (req, res) => {
         try {
             const option = {
                 where: {
-                    id: req.query.userId
+                    id: req.params.userId
                 }
             }
             const Users = await DB.Users.destroy(option);
