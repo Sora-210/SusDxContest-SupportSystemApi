@@ -2,7 +2,7 @@ import { Model, DataTypes } from 'sequelize'
 import { dbInstance } from '../instance'
 
 class SchoolCards extends Model {
-    public readonly id: number
+    public id: String
     public userId: number
     public readonly createdAt: Date
     public readonly updatedAt: Date
@@ -11,9 +11,8 @@ class SchoolCards extends Model {
 SchoolCards.init({
     id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
     },
     userId: {
         allowNull: false,

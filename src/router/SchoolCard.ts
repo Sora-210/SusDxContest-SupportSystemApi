@@ -38,7 +38,7 @@ SchoolCard.post('/', async (req, res) => {
     } else {
         try {
             const sendData = {
-                schoolCardId: req.body.schoolCardId,
+                id: req.body.schoolCardId,
                 userId: req.body.userId
             }
             const dbRes = await DB.SchoolCards.create(sendData);
@@ -50,7 +50,7 @@ SchoolCard.post('/', async (req, res) => {
                 "status": "Error",
                 "message": "ServerError"
             }
-            res.status(500).json(resMes)
+            res.status(500).json(resMes);
         }
     }
 })
@@ -58,17 +58,17 @@ SchoolCard.post('/', async (req, res) => {
 
 SchoolCard.get('/:schoolcardId', async (req, res) => {
     const T = DB.instance.transaction();
-    if (req.query.schoolcardId == "") {
+    if (req.params.schoolcardId == "") {
         const resMes = {
             status: "Error",
-            message: "Not Enough Query"
+            message: "Not Enough Params"
         }
         res.status(402).json(resMes);
     } else {
         try {
             const option = {
                 where: {
-                    id: req.query.schoolcardId
+                    id: req.params.schoolcardId
                 }
             }
             const Users = await DB.SchoolCards.findOne(option);

@@ -4,9 +4,8 @@ const querySchoolCardsTable = {
         return QueryInterface.createTable('SchoolCards', {
             id: {
                 allowNull: false,
-                autoIncrement: true,
                 primaryKey: true,
-                type: DataTypes.INTEGER
+                type: DataTypes.STRING
             },
             userId: {
                 allowNull: false,
