@@ -18,8 +18,8 @@ SystemRouter.get('/version', (req, res) => {
     res.status(200).json(responseMessage)
 })
 
-//[get] /helth
-SystemRouter.get('/helth', (req, res) => {
+//[get] /health
+SystemRouter.get('/health', (req, res) => {
     const responseMessage = {
         "status": "success",
         "message": "ok"
