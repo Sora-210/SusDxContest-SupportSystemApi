@@ -2,7 +2,7 @@ openapi: "3.0.0"
 info:
   title: DXContestSupportSystem API(仮名)
   description: DXコンテストに関する活動においてサポートを行うシステムに関連するAPI
-  version: 0.1.4 beta
+  version: 0.2.0 beta
 security:
   - api_key: []
 servers:
@@ -315,7 +315,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RoomInOutResponse"
-    put:
+    patch:
       tags:
         - roomInOut
       summary: ユーザーの在室情報を更新(状態反転)
