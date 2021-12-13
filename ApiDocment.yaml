@@ -2,7 +2,7 @@ openapi: "3.0.0"
 info:
   title: DXContestSupportSystem API(仮名)
   description: DXコンテストに関する活動においてサポートを行うシステムに関連するAPI
-  version: 0.1.0 beta
+  version: 0.1.2 beta
 security:
   - api_key: []
 servers:
@@ -33,7 +33,7 @@ paths:
                 example:
                   status: ok
                   message: 0.0.1
-  /helth:
+  /health:
     get:
       tags:
         - system
@@ -84,11 +84,13 @@ paths:
               $ref: '#/components/schemas/User'
       responses:
         '201':
-          description: CREATED
+          description: 作成完了
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '402':
+          description: プロパティ不十分
   
   /users/{userId}:
     get:
@@ -112,15 +114,15 @@ paths:
                 $ref: '#/components/schemas/User'
         '404':
           description:
-            システムメッセージ
+            対象ユーザ無し
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
               example:
-                status: errer
-                message: NotFound
-    put:
+                status: Info
+                message: Not Found
+    patch:
       tags:
         - users
       summary: ユーザーデータの更新
@@ -146,14 +148,14 @@ paths:
                 $ref: '#/components/schemas/User'
         '404':
           description:
-            システムメッセージ
+            該当するユーザデータ無し
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
               example:
-                status: errer
-                message: NotFound
+                status: Info
+                message: Not Found
         
       
     delete:
@@ -170,25 +172,18 @@ paths:
             type: integer
       responses:
         '200':
-          description: 完了メッセージ
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-              example:
-                status: ok
-                message: deleted
+          description: 完了
         '404':
           description:
-            システムメッセージ
+            該当するユーザデータ無し
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
               example:
-                status: errer
-                message: NotFound
-  /schoolcard:
+                status: Info
+                message: Not Found
+  /schoolcards:
     get:
       tags:
         - schoolCards
@@ -225,7 +220,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SchoolCard'
-  /schoolcard/{scoolcardId}:
+  /schoolcards/{scoolcardId}:
     get:
       tags:
         - schoolCards

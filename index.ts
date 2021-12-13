@@ -6,7 +6,7 @@ import cors from 'cors'
 //MagicNumber
 //ServerPort
 const PORT:Number = 8967
-const VERSION:String = '0.1.1 beta'
+const VERSION:String = '0.1.2 beta'
 export { VERSION }
 //#######################################
 //expressSetting
