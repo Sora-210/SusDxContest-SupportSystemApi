@@ -1,6 +1,6 @@
 // Import
 import { Router } from 'express'
-import { VERSION } from '../../index'
+import { START_TIME, VERSION } from '../../index'
 
 const SystemRouter = Router()
 
@@ -22,7 +22,9 @@ SystemRouter.get('/version', (req, res) => {
 SystemRouter.get('/health', (req, res) => {
     const responseMessage = {
         "status": "success",
-        "message": "ok"
+        "message": {
+            "startTime": START_TIME.getFullYear() + "/" + START_TIME.getMonth() + "/" + START_TIME.getDate() + " " + START_TIME.getHours() + ":" + START_TIME.getMinutes() + ":" + START_TIME.getSeconds()
+        }
     }
     res.status(200).json(responseMessage)
 })

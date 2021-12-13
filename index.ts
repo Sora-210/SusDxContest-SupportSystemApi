@@ -7,7 +7,8 @@ import cors from 'cors'
 //ServerPort
 const PORT:Number = 8967
 const VERSION:String = '0.1.2 beta'
-export { VERSION }
+const START_TIME:Date = new Date();
+export { VERSION , START_TIME}
 //#######################################
 //expressSetting
 const app:express.Express = express()
