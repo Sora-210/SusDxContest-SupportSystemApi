@@ -6,7 +6,7 @@ import cors from 'cors'
 //MagicNumber
 //ServerPort
 const PORT:Number = 8967
-const VERSION:String = '0.1.4 beta'
+const VERSION:String = '0.2.0 beta'
 const START_TIME:Date = new Date();
 export { VERSION , START_TIME}
 //#######################################
