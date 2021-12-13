@@ -2,6 +2,7 @@ import { Router } from 'express'
 const User = Router()
 
 import {DB} from '../db/index'
+import { Msg } from '../Msg'
 
 /*------------
 get /users
@@ -19,131 +20,120 @@ User.get('/', async (req, res) => {
         res.status(200).json(Users)
     } catch(e) {
         (await T).rollback();
-        const resMes = {
-            "status": "Error",
-            "message": "NotFound"
-        }
-        res.status(404).json(resMes)
+        console.log("###########################")
+        console.error(e)
+        res.status(500).json(Msg.ServerError);
     }
 })
 
 
 User.post('/', async (req, res) => {
+    if (!req.body.name || !req.body.schoolId) {
+        res.status(402).json(Msg.NotEnoughProp);
+        return 0
+    }
     const T = DB.instance.transaction();
-    if (req.body.name == "" || req.body.schoolId == "") {
-        const resMes = {
-            status: "Error",
-            message: "Not Enough Body"
+    try {
+        const sendData = {
+            name: req.body.name,
+            schoolId: req.body.schoolId
         }
-        res.status(402).json(resMes);
-    } else {
-        try {
-            const sendData = {
-                name: req.body.name,
-                schoolId: req.body.schoolId
-            }
-            const dbRes = await DB.Users.create(sendData);
-            (await T).commit()
-            res.status(201).json(dbRes);
-        } catch(e) {
-            (await T).rollback();
-            const resMes = {
-                "status": "Error",
-                "message": "ServerError"
-            }
-            res.status(404).json(resMes)
-        }
+        const resUserCreate = await DB.Users.create(sendData);
+        (await T).commit()
+        res.status(201).json(resUserCreate);
+    } catch(e) {
+        (await T).rollback();
+        console.log("###########################")
+        console.error(e)
+        res.status(500).json(Msg.ServerError);
     }
 })
 
 
 User.get('/:userId', async (req, res) => {
+    if (!req.params.userId) {
+        res.status(402).json(Msg.NotEnoughProp);
+        return 0
+    }
     const T = DB.instance.transaction();
-    if (req.params.userId == "") {
-        const resMes = {
-            status: "Error",
-            message: "Not Enough Params"
-        }
-        res.status(402).json(resMes);
-    } else {
-        try {
-            const option = {
-                where: {
-                    id: req.params.userId
-                }
+    try {
+        const getUser = await DB.Users.findOne({
+            where: {
+                id: req.params.userId
             }
-            const Users = await DB.Users.findOne(option);
-            (await T).commit();
-            res.status(200).json(Users)
-        } catch(e) {
-            (await T).rollback();
-            const resMes = {
-                "status": "Error",
-                "message": "NotFound"
-            }
-            res.status(404).json(resMes)
+        });
+        (await T).commit();
+
+        if (getUser) {
+            res.status(200).json(getUser)
+        } else {
+            res.status(404).json(Msg.NotFound)
         }
+    } catch(e) {
+        (await T).rollback();
+        console.log("###########################")
+        console.error(e)
+        res.status(500).json(Msg.ServerError);
     }
 })
 
 
 User.patch('/:userId', async (req, res) => {
+    if (!req.params.userId) {
+        res.status(402).json(Msg.NotEnoughProp)
+        return 0
+    }
     const T = DB.instance.transaction();
-    if (req.params.userId == "") {
-        const resMes = {
-            status: "Error",
-            message: "Not Enough Params"
-        }
-        res.status(402).json(resMes);
-    } else {
-        try {
-            const option = {
+    try {
+        const isUpdate = await DB.Users.update(req.body, {
+            where: {
+                id: req.params.userId
+            }
+        });
+        (await T).commit();
+        console.log(isUpdate)
+        if (isUpdate[0]) {
+            const User = await DB.Users.findOne({
                 where: {
                     id: req.params.userId
                 }
-            }
-            const sendData = req.body;
-            const Users = await DB.Users.update(sendData, option);
-            (await T).commit();
-            res.status(200).json(Users)
-        } catch(e) {
-            (await T).rollback();
-            const resMes = {
-                "status": "Error",
-                "message": "ServerError"
-            }
-            res.status(500).json(resMes)
+            });
+            res.status(200).json(User)
+        } else {
+            res.status(404).json(Msg.NotFound)
         }
+    } catch(e) {
+        (await T).rollback();
+        console.log("###########################")
+        console.error(e)
+        res.status(500).json(Msg.ServerError);
     }
 })
 
 
 User.delete('/:userId', async (req, res) => {
+    if (!req.params.userId) {
+        res.status(402).json(Msg.NotEnoughProp);
+        return 0
+    }
     const T = DB.instance.transaction();
-    if (req.params.userId == "") {
-        const resMes = {
-            status: "Error",
-            message: "Not Enough Query"
-        }
-        res.status(402).json(resMes);
-    } else {
-        try {
-            const option = {
-                where: {
-                    id: req.params.userId
-                }
+    try {
+        const isDelete = await DB.Users.destroy({
+            where: {
+                id: req.params.userId
             }
-            const Users = await DB.Users.destroy(option);
-            (await T).commit();
-            res.status(200).json(Users)
-        } catch(e) {
-            (await T).rollback();
-            const resMes = {
-                "status": "Error",
-                "message": "ServerError"
-            }
-            res.status(500).json(resMes)
+        });
+        (await T).commit();
+        if (isDelete) {
+            res.status(200).json([])
+        } else {
+            res.status(404).json(Msg.NotFound)
         }
+    } catch(e) {
+        (await T).rollback();
+        console.log("###########################")
+        console.error(e)
+        res.status(500).json(Msg.ServerError);
     }
 })
 
